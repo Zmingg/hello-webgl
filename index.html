@@ -6,15 +6,59 @@
   <title>Document</title>
 </head>
 <body>
-  <canvas id="canvas"></canvas>
+  <canvas id="canvas" width="600" height="400"></canvas>
   <script id="vertex-shader-2d" type="x-shader/x-vertex">
     attribute vec2 a_position;
-    attribute vec3 a_color;
+    attribute vec2 a_prev;
+    attribute vec2 a_next;
+    attribute vec2 a_corner;
+
+    uniform vec2 u_resolution;
+    uniform vec3 u_color;
+    uniform float u_lineWidth;
+
     varying vec3 v_color;
 
+    vec4 unProject(vec2 screen, float z, float w) {
+      vec2 clip_pos = screen / u_resolution;
+      float device_x = clip_pos.x * 2.0 - 1.0;
+      float device_y = clip_pos.y * 2.0;
+      return vec4(device_x * w, device_y, z, w);
+    }
+
     void main() {
-      v_color = a_color;
-      gl_Position = vec4(a_position, 0, 1);
+      v_color = u_color;
+
+      vec2 prev = a_prev;
+      vec2 next = a_next;
+
+      if (all(equal(a_position.xy, prev.xy))) {
+        prev.xy = a_position.xy + normalize(a_position.xy - next.xy);
+      }
+      if (all(equal(a_position.xy, next.xy))) {
+        next.xy = a_position.xy + normalize(a_position.xy - prev.xy);
+      }
+
+      vec2 AB = normalize(a_position.xy - prev.xy);
+      vec2 BC = normalize(next.xy - a_position.xy);
+      vec2 tangent = normalize(AB + BC);
+      vec2 miter = vec2(-tangent.y, tangent.x);
+      vec2 normalA = vec2(-AB.y, AB.x);
+      float miterLength = 1.0 / dot(miter, normalA);
+
+      vec2 screenPosition = a_position;
+
+      vec2 point = normalize(AB - BC);
+
+      if (miterLength > 10.0 && sign(a_corner.x * dot(miter, point)) > 0.0) {
+        screenPosition = screenPosition - a_corner.x * -1.0 * u_lineWidth * normalA;
+        // screenPosition = screenPosition + a_corner.x * miter * u_lineWidth * miterLength;
+      } else {
+        screenPosition = screenPosition + a_corner.x * miter * u_lineWidth * miterLength;
+      }
+
+      gl_Position = unProject(screenPosition, 0.0, 1.0);
+
     }
   </script>
   
@@ -27,6 +71,7 @@
     }
   </script>
 
+  <script src="lib.js"></script>
   <script src="index.js"></script>
 </body>
 </html>
