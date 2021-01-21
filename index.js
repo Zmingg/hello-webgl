@@ -18,55 +18,16 @@ const path = [
   10, 0,
   50, 100,
   100, -100,
-  140, 0,
+  148, 0,
   150, 100,
-  160, 0,
+  152, 0,
   300, 0,
 ];
-const { current, prev, next } = window.duplicate(path);
+const { current, prev, next, corner } = window.duplicate(path);
 window.enableVertex(gl, "a_prev", prev, 2);
 window.enableVertex(gl, "a_next", next, 2);
 window.enableVertex(gl, "a_position", current, 2);
-window.enableVertex(gl, "a_corner", [
-  -1, 0,
-  1, 0,
-  -1, 0,
-  1, 0,
-  -1, 0,
-  1, 0,
-  -1, 0,
-  1, 0,
-  -1, 0,
-  1, 0,
-  -1, 0,
-  1, 0,
-  -1, 0,
-  1, 0,
-], 2);
-console.log(current)
-
-
-// Create a buffer and put a single clipspace rectangle in
-// it (2 triangles)
-// var positionLocation = gl.getAttribLocation(program, "a_position");
-// var buffer = gl.createBuffer();
-// gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-// gl.bufferData(
-//   gl.ARRAY_BUFFER,
-//   new Float32Array([
-//     10, 0,
-//     20, 0,
-//     50, 50,
-//     60, 50,
-//     100, -50,
-//     110, -50,
-//     140, 0,
-//     150, 0
-//   ]),
-//   gl.STATIC_DRAW
-// );
-// gl.enableVertexAttribArray(positionLocation);
-// gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
+window.enableVertex(gl, "a_corner", corner, 2);
 
 // draw
 // gl.drawArrays(gl.TRIANGLES, 0, 4); 
@@ -75,5 +36,5 @@ gl.uniform2f(resolutionUniformLocation, gl.canvas.width, gl.canvas.height);
 var colorUniformLocation = gl.getUniformLocation(program, "u_color");
 gl.uniform3fv(colorUniformLocation, new Float32Array([0.0, 0.0, 0.0]));
 var lineWidthUniformLocation = gl.getUniformLocation(program, "u_lineWidth");
-gl.uniform1f(lineWidthUniformLocation, 4.0);
-gl.drawArrays(gl.TRIANGLE_STRIP, 0, path.length); 
+gl.uniform1f(lineWidthUniformLocation, 2.0);
+gl.drawArrays(gl.TRIANGLE_STRIP, 0, path.length * 2); 

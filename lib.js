@@ -1,8 +1,10 @@
 (function() {
+  // copy vertexes
   window.duplicate = (positions) => {
     const curRet = [];
     const prevRet = [];
     const nextRet = [];
+    const cornerRet = [];
     positions.forEach((position, idx) => {
       if (idx % 2 === 1) {
         const prevX = idx - 2 < 0 ? positions[idx - 1] : positions[idx - 3];
@@ -11,15 +13,23 @@
         const curY = position;
         const nextX = idx + 2 > positions.length ? positions[idx - 1] : positions[idx + 1];
         const nextY = idx + 2 > positions.length ? position : positions[idx + 2];
-        curRet.push(curX, curY, curX, curY);
-        prevRet.push(prevX, prevY, prevX, prevY);
-        nextRet.push(nextX, nextY, nextX, nextY);
+        const corner = [
+          -1, -1,
+          1, -1, 
+          -1, 1,
+          1, 1, 
+        ];
+        curRet.push(curX, curY, curX, curY, curX, curY, curX, curY);
+        prevRet.push(prevX, prevY, prevX, prevY, prevX, prevY, prevX, prevY);
+        nextRet.push(nextX, nextY, nextX, nextY, nextX, nextY, nextX, nextY);
+        cornerRet.push(...corner);
       }
     });
     return {
       current: curRet,
       prev: prevRet,
-      next: nextRet
+      next: nextRet,
+      corner: cornerRet
     };
   }
 

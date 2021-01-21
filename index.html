@@ -44,15 +44,14 @@
       vec2 tangent = normalize(AB + BC);
       vec2 miter = vec2(-tangent.y, tangent.x);
       vec2 normalA = vec2(-AB.y, AB.x);
-      float miterLength = 1.0 / dot(miter, normalA);
+      float miterLength = 0.5 / dot(miter, normalA);
 
       vec2 screenPosition = a_position;
 
       vec2 point = normalize(AB - BC);
 
       if (miterLength > 10.0 && sign(a_corner.x * dot(miter, point)) > 0.0) {
-        screenPosition = screenPosition - a_corner.x * -1.0 * u_lineWidth * normalA;
-        // screenPosition = screenPosition + a_corner.x * miter * u_lineWidth * miterLength;
+        screenPosition = screenPosition - a_corner.x * a_corner.y * u_lineWidth * normalA;
       } else {
         screenPosition = screenPosition + a_corner.x * miter * u_lineWidth * miterLength;
       }
