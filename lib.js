@@ -60,7 +60,7 @@
     gl.deleteShader(shader);
   }
 
-  window.enableVertex = (gl, locationName, array, size) => {
+  window.enableVertex = (gl, program, locationName, array, size) => {
     var location = gl.getAttribLocation(program, locationName);
     var buffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, buffer);

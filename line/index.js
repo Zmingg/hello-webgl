@@ -16,10 +16,13 @@ gl.useProgram(program);
 
 const path = [
   10, 0,
-  50, 100,
-  100, -100,
+  50, -100,
+  60, 100,
+  65, -100,
+  70, 0,
+  100, 100,
   148, 0,
-  150, 100,
+  150, -100,
   152, 0,
   300, 0,
 ];
@@ -28,7 +31,7 @@ window.enableVertex(gl, "a_prev", prev, 2);
 window.enableVertex(gl, "a_next", next, 2);
 window.enableVertex(gl, "a_position", current, 2);
 window.enableVertex(gl, "a_corner", corner, 2);
-
+console.log(path.length, current.length)
 // draw
 // gl.drawArrays(gl.TRIANGLES, 0, 4); 
 var resolutionUniformLocation = gl.getUniformLocation(program, "u_resolution");
